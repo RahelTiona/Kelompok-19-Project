@@ -82,7 +82,7 @@ public class FlappyBirdGame {
         };
 
         for (String image : requiredImages) {
-            File imageFile = new File("src/assets/image/" + image);
+            File imageFile = new File("flappy-bird-java-master/src/assets/image/" + image);
             if (!imageFile.exists()) {
                 System.err.println("Warning: Required image file missing: " + image);
                 System.err.println("Please ensure all required assets are in place.");
@@ -97,7 +97,7 @@ public class FlappyBirdGame {
         };
 
         for (String sound : requiredSounds) {
-            File soundFile = new File("src/assets/sound/" + sound);
+            File soundFile = new File("flappy-bird-java-master/src/assets/sound/" + sound);
             if (!soundFile.exists()) {
                 System.err.println("Warning: Required sound file missing: " + sound);
                 System.err.println("Please ensure all required assets are in place.");

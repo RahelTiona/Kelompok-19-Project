@@ -29,7 +29,7 @@ public class GameDashboard {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 // Draw background
-                ImageIcon background = new ImageIcon("src/assets/image/background.png");
+                ImageIcon background = new ImageIcon("flappy-bird-java-master/src/assets/image/background.png");
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), null);
             }
         };
