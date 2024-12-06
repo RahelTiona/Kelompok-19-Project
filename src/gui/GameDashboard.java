@@ -37,8 +37,7 @@ public class GameDashboard {
         }
     }
 
-    private static BirdSkin currentSkin = BirdSkin.YELLOW; // Default skin
-    
+    private static BirdSkin currentSkin = BirdSkin.YELLOW; 
     private static User currentUser;
     private static JFrame frame;
     private static JLabel userStatusLabel;
