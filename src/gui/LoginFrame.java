@@ -146,7 +146,7 @@ public class LoginFrame extends JFrame {
     private void loginUser() {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
-    
+
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                 "Please fill in all fields",
@@ -154,17 +154,16 @@ public class LoginFrame extends JFrame {
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
-    
+
         try {
             User user = userDAO.authenticateUser(username, password);
             if (user != null) {
                 GameDashboard.setCurrentUser(user);
-                
-                // Tampilkan Game Menu tanpa menutup halaman login
+                dispose();
                 SwingUtilities.invokeLater(() -> {
                     GameDashboard.createAndShowGameMenu();
                 });
-    
+                
                 JOptionPane.showMessageDialog(this, 
                     "Login Berhasil!", 
                     "Selamat Datang", 
