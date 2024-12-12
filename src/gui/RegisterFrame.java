@@ -20,7 +20,7 @@ public class RegisterFrame extends JFrame {
 
     private void initComponents() {
         setTitle("Register New Account");
-        setSize(400, 600);
+        setSize(400, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -40,7 +40,7 @@ public class RegisterFrame extends JFrame {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(Color.BLACK);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setBounds(0, 30, 400, 50);
+        titleLabel.setBounds(0, 30, 400, 20);
         mainPanel.add(titleLabel);
 
         // Starting position for components
@@ -145,7 +145,7 @@ public class RegisterFrame extends JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(255, 255, 150));
             }
-
+ 
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(Color.YELLOW);
             }
@@ -224,7 +224,6 @@ public class RegisterFrame extends JFrame {
     public void setVisible(boolean b) {
         super.setVisible(b);
         if (b) {
-            // Clear all fields when frame becomes visible
             usernameField.setText("");
             emailField.setText("");
             passwordField.setText("");

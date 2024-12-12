@@ -19,7 +19,7 @@ public class LoginFrame extends JFrame {
 
     private void initComponents() {
         setTitle("Login");
-        setSize(400, 600);
+        setSize(400, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -38,7 +38,7 @@ public class LoginFrame extends JFrame {
         JLabel titleLabel = new JLabel("LOGIN");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(Color.BLACK);
-        titleLabel.setBounds(150, 30, 200, 50);
+        titleLabel.setBounds(155, 30, 200, 20);
         mainPanel.add(titleLabel);
 
         // Username Label dan Field
@@ -146,7 +146,7 @@ public class LoginFrame extends JFrame {
     private void loginUser() {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
-
+    
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                 "Please fill in all fields",
@@ -154,16 +154,13 @@ public class LoginFrame extends JFrame {
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+    
         try {
             User user = userDAO.authenticateUser(username, password);
             if (user != null) {
                 GameDashboard.setCurrentUser(user);
-                dispose();
-                SwingUtilities.invokeLater(() -> {
-                    GameDashboard.createAndShowGameMenu();
-                });
-                
+                // Ganti ini untuk menampilkan menu game tanpa menutup jendela
+                GameDashboard.createAndShowGameMenu();
                 JOptionPane.showMessageDialog(this, 
                     "Login Berhasil!", 
                     "Selamat Datang", 

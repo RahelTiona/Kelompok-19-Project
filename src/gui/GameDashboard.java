@@ -11,6 +11,7 @@ import model.User;
 import model.Score;
 import config.ScoreDAO;
 import config.UserDAO;
+import custom_component.StyledButton;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +19,15 @@ public class GameDashboard {
     // Konstanta utama untuk konfigurasi tampilan frame
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 700;
-    private static final int BUTTON_WIDTH = 200;
-    private static final int BUTTON_HEIGHT = 50;
-    private static final int BUTTON_X = 100;
     private static final String BACKGROUND_PATH = "src/assets/image/background.png";
+
+    // Variabel global untuk menyimpan state aplikasi
+    private static BirdSkin currentSkin = BirdSkin.YELLOW;
+    private static User currentUser;
+    private static JFrame frame;
+    private static JLabel userStatusLabel;
+    private static final ScoreDAO scoreDAO = new ScoreDAO();
+    private static final UserDAO userDAO = new UserDAO();
 
     // Enum untuk mendefinisikan jenis skin burung yang tersedia
     public enum BirdSkin {
@@ -40,56 +46,7 @@ public class GameDashboard {
         }
     }
 
-    // Variabel global untuk menyimpan state aplikasi
-    private static BirdSkin currentSkin = BirdSkin.YELLOW;
-    private static User currentUser;
-    private static JFrame frame;
-    private static JLabel userStatusLabel;
-    private static final ScoreDAO scoreDAO = new ScoreDAO();
-    private static final UserDAO userDAO = new UserDAO();
-
-    // Kelas StyledButton untuk membuat tombol dengan gaya tertentu
-    private static class StyledButton extends JButton {
-        public StyledButton(String text, int yPosition) {
-            setText(text);
-            setBounds(BUTTON_X, yPosition, BUTTON_WIDTH, BUTTON_HEIGHT);
-            setBackground(Color.YELLOW);
-            setForeground(Color.BLACK);
-            setFocusable(false);
-            setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-            setFont(new Font("Arial", Font.BOLD, 14));
-            setupHoverEffect();
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            g.setColor(getBackground());
-            g.fillRect(0, 0, getWidth(), getHeight());
-            g.setColor(getForeground());
-            FontMetrics fm = g.getFontMetrics();
-            drawCenteredText(g, fm);
-        }
-
-        private void drawCenteredText(Graphics g, FontMetrics fm) {
-            int x = (getWidth() - fm.stringWidth(getText())) / 2;
-            int y = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
-            g.drawString(getText(), x, y);
-        }
-
-        private void setupHoverEffect() {
-            addMouseListener(new java.awt.event.MouseAdapter() {
-                public void mouseEntered(java.awt.event.MouseEvent evt) {
-                    setBackground(new Color(255, 255, 150));
-                }
-
-                public void mouseExited(java.awt.event.MouseEvent evt) {
-                    setBackground(Color.YELLOW);
-                }
-            });
-        }
-    }
-
-    // Fungsi utama untuk membuat dan menampilkan menu game
+    // Fungsi utama untuk membuat dan menampilkan menu 
     public static void createAndShowGameMenu() {
         initializeFrame();
         JPanel panel = createMainPanel();
@@ -119,11 +76,18 @@ public class GameDashboard {
         };
     }
 
-    // Fungsi untuk mengatur elemen-elemen UI dalam panel utama
+    // Fungsi untuk mengatur UI
     private static void setupUI(JPanel panel) {
         panel.setLayout(null);
         setupUserStatusLabel(panel);
         setupButtons(panel);
+
+        JLabel gameTitleLabel = new JLabel("FLAPPY BIRD GAME", SwingConstants.CENTER);
+        Font titleFont = new Font("Rockwell", Font.BOLD, 30);
+        gameTitleLabel.setFont(titleFont);
+        gameTitleLabel.setForeground(new Color(0, 0, 205));
+        gameTitleLabel.setBounds(0, 470, FRAME_WIDTH, 40);
+        panel.add(gameTitleLabel);
     }
 
     // Fungsi untuk membuat label status pengguna
@@ -136,7 +100,7 @@ public class GameDashboard {
         panel.add(userStatusLabel);
     }
 
-    // Fungsi untuk membuat dan mengatur tombol-tombol utama di menu
+    // Fungsi untuk mengatur tombol-tombol
     private static void setupButtons(JPanel panel) {
         StyledButton accountButton = new StyledButton("Account", 220);
         StyledButton highScoreButton = new StyledButton("Show Score", 280);
@@ -154,7 +118,70 @@ public class GameDashboard {
         panel.add(playButton);
     }
 
-    // Fungsi untuk menampilkan dialog pemilihan skin burung
+    // Fungsi untuk menampilkan dialog skor tertinggi
+    private static void showHighScoresDialog() {
+        JDialog dialog = new JDialog(frame, "High Scores", true);
+        dialog.setLayout(new BorderLayout());
+        dialog.setSize(650, 500);
+        dialog.setLocationRelativeTo(frame);
+        dialog.setResizable(false);
+
+        JPanel mainPanel = createHighScoreMainPanel();
+
+        dialog.add(mainPanel);
+        dialog.setVisible(true);
+    }
+
+    private static JPanel createHighScoreMainPanel() {
+        JPanel mainPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                GradientPaint gp = new GradientPaint(0, 0, new Color(135, 206, 235),
+                        0, getHeight(), new Color(255, 255, 255));
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        mainPanel.setLayout(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
+
+        JLabel titleLabel = new JLabel("Score Leaderboard");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+
+        JScrollPane tableScrollPane = new JScrollPane(createHighScoreTable());
+        tableScrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        JPanel buttonPanel = createHighScoreButtonPanel();
+
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        mainPanel.add(tableScrollPane, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        return mainPanel;
+    }
+
+    private static JPanel createHighScoreButtonPanel() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        StyledButton playButton = new StyledButton("Play Game", Color.YELLOW);
+        StyledButton closeButton = new StyledButton("Close", Color.YELLOW);
+
+        playButton.addActionListener(e -> {
+            handlePlayButton();
+        });
+        closeButton.addActionListener(e -> {
+            ((JDialog) SwingUtilities.getWindowAncestor(buttonPanel)).dispose();
+        });
+
+        buttonPanel.add(playButton);
+        buttonPanel.add(closeButton);
+        return buttonPanel;
+    }
+
     private static void showSkinSelectionDialog() {
         if (!checkUserLoggedIn("change skin")) return;
 
@@ -241,61 +268,6 @@ public class GameDashboard {
         SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
     }
 
-    // Fungsi untuk menampilkan dialog skor tertinggi
-    private static void showHighScoresDialog() {
-        JDialog dialog = new JDialog(frame, "High Scores", true);
-        dialog.setLayout(new BorderLayout());
-        dialog.setSize(650, 500);
-        dialog.setLocationRelativeTo(frame);
-        dialog.setResizable(false);
-
-        JPanel mainPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-                GradientPaint gp = new GradientPaint(0, 0, new Color(135, 206, 235),
-                        0, getHeight(), new Color(255, 255, 255));
-                g2d.setPaint(gp);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-            }
-        };
-
-        mainPanel.setLayout(new BorderLayout(10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
-
-        JLabel titleLabel = new JLabel("Score Leaderboard");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-
-        JScrollPane tableScrollPane = new JScrollPane(createHighScoreTable());
-        tableScrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        buttonPanel.setOpaque(false);
-
-        JButton playButton = createStyledButton("Play Game", new Color(46, 204, 113));
-        JButton closeButton = createStyledButton("Close", new Color(231, 76, 60));
-
-        playButton.addActionListener(e -> {
-            dialog.dispose();
-            handlePlayButton();
-        });
-        closeButton.addActionListener(e -> dialog.dispose());
-
-        buttonPanel.add(playButton);
-        buttonPanel.add(closeButton);
-
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
-        mainPanel.add(tableScrollPane, BorderLayout.CENTER);
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        dialog.add(mainPanel);
-        dialog.setVisible(true);
-    }
-
     // Fungsi untuk membuat tabel skor tertinggi
     private static JTable createHighScoreTable() {
         String[] columns = {"Rank", "Player", "Score", "Time", "Date"};
@@ -344,40 +316,11 @@ public class GameDashboard {
         return table;
     }
 
-    // Fungsi untuk membuat tombol dengan gaya kustom
-    private static JButton createStyledButton(String text, Color baseColor) {
-        JButton button = new JButton(text) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                g2.setColor(getModel().isPressed() ? baseColor.darker() :
-                        getModel().isRollover() ? baseColor.brighter() : baseColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-
-                g2.setColor(Color.WHITE);
-                g2.setFont(new Font("Arial", Font.BOLD, 14));
-                FontMetrics fm = g2.getFontMetrics();
-                int x = (getWidth() - fm.stringWidth(getText())) / 2;
-                int y = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
-                g2.drawString(getText(), x, y);
-            }
-        };
-
-        button.setPreferredSize(new Dimension(120, 35));
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-
-        return button;
-    }
-
     // Fungsi untuk mengisi data ke tabel skor dari database
     private static void populateTableData(DefaultTableModel model) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            List<Score> scores = scoreDAO.getTopScores(10);
+            List<Score> scores = scoreDAO.getAllScores();
             int rank = 1;
 
             for (Score score : scores) {

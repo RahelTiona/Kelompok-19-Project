@@ -19,7 +19,6 @@ public class ScoreDAO {
 
     public boolean initializeUserScore(Score score) throws SQLException {
         String insertQuery = "INSERT INTO score (id, score, game_duration, date_time) VALUES (?, ?, ?, ?)";
-
         
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
@@ -82,15 +81,12 @@ public class ScoreDAO {
         return null;
     }
     
-    public java.util.List<Score> getAllScoresByUserId(int userId) throws SQLException {
-        String query = "SELECT * FROM score WHERE id = ? ORDER BY date_time DESC";
+    public java.util.List<Score> getAllScores() throws SQLException {
+        String query = "SELECT * FROM score ORDER BY score DESC"; 
         java.util.List<Score> scores = new java.util.ArrayList<>();
-        
         
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            
-            stmt.setInt(1, userId);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -106,7 +102,6 @@ public class ScoreDAO {
         }
         return scores;
     }
-    
     public java.util.List<Score> getTopScores(int limit) throws SQLException {
         String query = "SELECT * FROM score ORDER BY score DESC LIMIT ?";
         java.util.List<Score> scores = new java.util.ArrayList<>();
