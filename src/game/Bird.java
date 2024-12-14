@@ -1,6 +1,6 @@
 package game;
 
-public class Bird {
+public class Bird implements GameInitializable {
     private int x;
     private int y;
     private final int width = 30;
@@ -9,6 +9,7 @@ public class Bird {
     private final double gravity = 0.5;
     private final double jumpStrength = -8;
     private boolean isDead = false;
+    private boolean isInitialState = true; // Implementasi flag dari interface
 
     public Bird(int initialX, int initialY) {
         this.x = initialX;
@@ -16,8 +17,28 @@ public class Bird {
         this.velocityY = 0;
     }
 
+    @Override
+    public void initialize() {
+        // Set burung dalam kondisi awal
+        isInitialState = true;
+        y = 300;
+        velocityY = 0;
+        isDead = false;
+    }
+
+    @Override
+    public void startMovement() {
+        // Mulai gerakan setelah loncatan pertama
+        isInitialState = false;
+    }
+
+    @Override
+    public boolean isInitialState() {
+        return isInitialState;
+    }
+
     public void update() {
-        if (!isDead) {
+        if (!isDead && !isInitialState) { // Tambahkan kondisi !isInitialState
             velocityY += gravity;
             y += velocityY;
 
@@ -35,6 +56,9 @@ public class Bird {
 
     public void jump() {
         if (!isDead) {
+            if (isInitialState) {
+                startMovement(); // Aktifkan gerakan saat loncatan pertama
+            }
             velocityY = jumpStrength;
         }
     }
@@ -72,5 +96,6 @@ public class Bird {
         this.y = initialY;
         this.velocityY = 0;
         this.isDead = false;
+        initialize(); // Kembalikan ke kondisi awal
     }
 }

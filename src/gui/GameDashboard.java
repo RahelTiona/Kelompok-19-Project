@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import game.BirdSkin;
 import game.GamePanel;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
@@ -28,23 +29,6 @@ public class GameDashboard {
     private static JLabel userStatusLabel;
     private static final ScoreDAO scoreDAO = new ScoreDAO();
     private static final UserDAO userDAO = new UserDAO();
-
-    // Enum untuk mendefinisikan jenis skin burung yang tersedia
-    public enum BirdSkin {
-        YELLOW("yellowbird.png"),
-        BLUE("bluebird.png"),
-        RED("redbird.png");
-
-        private final String filename;
-
-        BirdSkin(String filename) {
-            this.filename = filename;
-        }
-
-        public String getFilename() {
-            return filename;
-        }
-    }
 
     // Fungsi utama untuk membuat dan menampilkan menu 
     public static void createAndShowGameMenu() {
