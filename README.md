@@ -9,21 +9,21 @@ Dalam permainan ini, pemain mengontrol seekor burung yang harus melewati rintang
 
 ## Fitur Utama
 1. Antarmuka Pengguna yang Menarik
-Menggunakan Swing untuk membuat antarmuka grafis yang responsif dan menarik.
+- Menggunakan Swing untuk membuat antarmuka grafis yang responsif dan menarik.
 2. Fitur Akun
-Pemain dapat mendaftar dan masuk ke akun mereka untuk menyimpan skor.
+- Pemain dapat mendaftar dan masuk ke akun mereka untuk menyimpan skor.
 3. Score Leaderboard
-Menampilkan skor tertinggi yang dicapai oleh pemain dalam permainan.
+- Menampilkan skor tertinggi yang dicapai oleh pemain dalam permainan.
 4. Skin Changer 
-Pemain dapat memilih tampilan burung yang berbeda (kuning, biru, merah).
+- Pemain dapat memilih tampilan burung yang berbeda (kuning, biru, merah).
 
 
 ## Cara Bermain
 1. Mulai Permainan
-Jalankan aplikasi dan pilih 'Play' pada menu utama.
+- Jalankan aplikasi dan pilih 'Play' pada menu utama.
 2. Kontrol Burung
-Tekan tombol space pada laptop untuk membuat burung terbang. Setiap tekan akan membuat burung melompat ke atas.
+- Tekan tombol space pada laptop untuk membuat burung terbang. Setiap tekan akan membuat burung melompat ke atas.
 3. Menghindari Pipa
-Hindari pipa yang bergerak. Setiap pipa yang berhasil dilewati akan menambah skor Anda
+- Hindari pipa yang bergerak. Setiap pipa yang berhasil dilewati akan menambah skor Anda
 4. Akhir Permainan
-Permainan berakhir jika burung menabrak pipa atau jatuh ke tanah. Setelah permainan berakhir, Anda dapat melihat skor dan pilihan untuk bermain lagi.
+- Permainan berakhir jika burung menabrak pipa atau jatuh ke tanah. Setelah permainan berakhir, Anda dapat melihat skor dan pilihan untuk bermain lagi.
