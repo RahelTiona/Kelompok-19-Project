@@ -168,30 +168,32 @@ public class GameDashboard {
 
     private static void showSkinSelectionDialog() {
         if (!checkUserLoggedIn("change skin")) return;
-
+    
         JDialog skinDialog = new JDialog(frame, "Select Bird Skin", true);
         skinDialog.setLayout(new GridLayout(3, 1, 10, 10));
         skinDialog.setSize(300, 400);
         skinDialog.setLocationRelativeTo(frame);
-
-        for (BirdSkin skin : BirdSkin.values()) {
-            JButton skinButton = new JButton(skin.name() + " Bird");
+    
+        BirdSkin[] skins = { BirdSkin.YELLOW, BirdSkin.BLUE, BirdSkin.RED };
+    
+        for (BirdSkin skin : skins) {
+            JButton skinButton = new JButton(skin.getFilename().substring(0, skin.getFilename().indexOf('.')) + " Bird");
             skinButton.setIcon(new ImageIcon("src/assets/image/" + skin.getFilename()));
-
+    
             skinButton.addActionListener(e -> {
                 currentSkin = skin;
                 JOptionPane.showMessageDialog(skinDialog,
-                        skin.name() + " bird selected!",
+                        skin.getFilename().substring(0, skin.getFilename().indexOf('.')) + " bird selected!",
                         "Skin Changed",
                         JOptionPane.INFORMATION_MESSAGE);
                 skinDialog.dispose();
             });
             skinDialog.add(skinButton);
         }
-
+    
         skinDialog.setVisible(true);
     }
-
+    
     // Fungsi untuk menangani aksi tombol "Play"
     private static void handlePlayButton() {
         if (!checkUserLoggedIn("play the game")) return;
